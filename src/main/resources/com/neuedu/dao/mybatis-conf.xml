@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- mybatis的基本配置   加载驱动  创建链接-->
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>        <!--指定 MyBatis 所用日志的具体实现，未指定时将自动查找。-->
+    </settings>
+    <environments default="qq">             <!--environments   配置环境-->
+        <environment id="qq">                <!--default保证与下列id一致-->
+            <transactionManager type="JDBC"></transactionManager>   <!--事务管理器的配置 jdbc-->
+            <dataSource type="POOLED">          <!--数据源的配置 POOLED-->
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://127.0.0.1:3306/user?useUnicode=true&amp;characterEncoding=utf8"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123456"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="com/neuedu/dao/UserDao.xml" />    <!--映射文件  相对于类路径的资源引用    对应的其他sql语句xml文件类的映射-->
+    </mappers>
+</configuration>
