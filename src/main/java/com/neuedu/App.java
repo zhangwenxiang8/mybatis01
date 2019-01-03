@@ -1,6 +1,7 @@
 package com.neuedu;
 
 
+import com.neuedu.MybatisUtil.UtilM;
 import com.neuedu.pojo.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
@@ -8,32 +9,195 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.io.InputStream;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class App {
-   @Test
-    public void s1(){
+    @Test
+    public void s1() {
+        SqlSession sqlSession = null;
 
-       try {
-           InputStream   is = Resources.getResourceAsStream("com/neuedu/dao/mybatis-conf.xml");
-           //将xml文件读成 '流',结果初始化转为输入流类型的is
-           SqlSessionFactory factory= new SqlSessionFactoryBuilder().build(is);
-           //SqlSessionFactoryBuilder的build方法将is流装进来,创建一个工厂赋值给factory()
-           SqlSession sqlSession =factory.openSession();
-           /*打开一个会话   (SqlSession 完全包含了面向数据库执行 SQL 命令所需的所有方法。
-           可以通过sqlSession直接执行已映射的 SQL 语句)*/
-           List<User> lists = sqlSession.selectList("getUsers");
-                //sqlSession执行查找方法使用这条sql语句, 再利用List集合做接收
-           for (User u:lists
-                   ) {
-               System.out.println(u);   //foreach循环打印输出内容
-           }
-       } catch (IOException e) {
-           e.printStackTrace();
-       }
+        /*
+         * 如果传递的参数是javabean  #{属性名}
+         * 如果传递的是一个参数
+         * 如果是多个参数 map
+         * */
+        try {
+            sqlSession = UtilM.getsession();
+
+            List<User> lists = sqlSession.selectList("getUsers");
+            for (User u : lists) {
+                System.out.println(u);
+            }
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+
+//    @Test
+//    public void s2() {
+//        SqlSession sqlSession = null;
+//        try {
+//            sqlSession = UtilM.getsession();
+//
+//            User u = new User();
+//            u.setUsername("申翔宇");
+//            u.setPassword("22");
+//            sqlSession.insert("intertone", u);
+//            sqlSession.commit();            //需要手动提交的方法 commit
+//        } finally {
+//            if (sqlSession != null) {
+//                sqlSession.close();
+//            }
+//        }
+//    }
+
+    @Test
+    public void s3() {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = UtilM.getsession();
+            sqlSession.delete("deleteone", 82);
+            sqlSession.commit();            //需要手动提交的方法 commit
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Test
+    public void s4() {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = UtilM.getsession();
+            Map<String, Object> map = new HashMap<>();
+            map.put("a", "80");
+            map.put("b", 3);
+            sqlSession.delete("deleteandtwo", map);
+            sqlSession.commit();            //需要手动提交的方法 commit
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Test
+    public void s5() {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = UtilM.getsession();
+            User u = new User();
+            u.setUsername("abc1234");
+            u.setPassword("987654321");
+            sqlSession.insert("intertone", u);
+
+            sqlSession.commit();            //需要手动提交的方法 commit
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Test
+    public void s6() {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = UtilM.getsession();
+            User u = new User();
+            u.setId(1);
+            sqlSession.selectOne("getone", u);
+
+            sqlSession.commit();            //需要手动提交的方法 commit
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
+
+    @Test
+    public void s7(){
+        SqlSession session=null;
+        try{
+          session = UtilM.getsession();
+            User u=new User();
+            u.setId(1);
+            u.setUsername("qq");
+            u.setPassword("520");
+            session.update("updateone",u);
+            session.commit();
+        }finally {
+            if (session != null){
+                session.close();
+            }
+        }
+    }
+//
+//    @Test
+//    public void s8(){
+//        SqlSession session=null;
+//        try{
+//          session = UtilM.getsession();
+//          User u=new User();
+//          u.setUsername("qq");
+//        List<User> user = session.selectList("getUsers",u);
+//            for ( User list: user
+//                 ) {
+//                System.out.println(list);
+//            }
+//            session.commit();
+//        }finally {
+//            if (session !=null){
+//                session.close();
+//            }
+//        }
+//    }
+
+    @Test
+    public void s9(){
+            SqlSession session=null;
+            try{
+                session = UtilM.getsession();
+                User u=new User();
+                u.setUsername("a");
+                u.setId(2);
+                List<User> user = session.selectList("getUsers",u);
+                for ( User list: user
+                        ) {
+                    System.out.println(list);
+                }
+                session.commit();
+            }finally {
+                if (session !=null){
+                    session.close();
+                }
+            }
+        }
 
 
-   }
+    @Test
+    public void s10() {
+        SqlSession sqlSession = null;
+        try {
+            sqlSession = UtilM.getsession();
+
+            User u = new User();
+            u.setUsername("申翔宇");
+            u.setPassword("122");
+            u.setTele("111");
+            sqlSession.insert("intertone", u);
+            sqlSession.commit();            //需要手动提交的方法 commit
+        } finally {
+            if (sqlSession != null) {
+                sqlSession.close();
+            }
+        }
+    }
 }

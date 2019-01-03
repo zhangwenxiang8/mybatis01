@@ -19,6 +19,6 @@
         </environment>
     </environments>
     <mappers>
-        <mapper resource="com/neuedu/dao/UserDao.xml" />    <!--映射文件  相对于类路径的资源引用    对应的其他sql语句xml文件类的映射-->
+        <mapper resource="com/neuedu/dao/UserDao.xml" />    <!--映射文件  相对于类路径的资源引用,指定映射的哪个接口    对应的其他sql语句xml文件类的映射-->
     </mappers>
 </configuration>

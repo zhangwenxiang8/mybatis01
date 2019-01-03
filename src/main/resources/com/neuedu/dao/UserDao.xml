@@ -3,8 +3,80 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.neuedu.dao.Userdao">   <!--映射的路径-->
-        <select id="getUsers" resultType="com.neuedu.pojo.User">  /*id= 方法名   resultType=查询的时候需要映射返回结果集*/
-            select * from user
-        </select>
+<mapper namespace="com.neuedu.dao.Userdao">   <!--映射的路径   命名空间-->
+        <!--<select id="getUsers" resultType="com.neuedu.pojo.User">  /*id= 方法名   resultType=查询的时候需要映射返回结果集*/-->
+            <!--select * from user-->
+        <!--</select>-->
+
+    <!--<insert id="intertone" parameterType="com.neuedu.pojo.User">-->
+        <!--insert into  user (username,password,tele)values (#{username},#{password},#{tele})-->
+        <!--<selectKey keyProperty="id" keyColumn="id" resultType="int">-->
+            <!--select last_insert_id()       /*selectKey  获取到id值的方法,不然为Null*/-->
+        <!--</selectKey>-->
+    <!--</insert>-->
+
+    <delete id="deleteone">
+        delete from user where id=#{id}
+    </delete>
+
+    <delete id="deleteandtwo" parameterType="map">
+        delete from user where id=#{a} and username=#{b}
+    </delete>
+
+    <select id="getone" resultType="com.neuedu.pojo.User">
+        select * from user where id=#{id}
+    </select>
+
+    <update id="updateone">
+      /*根据插入的值,判断执行语句中是不是有这个字段*/
+        update user set username=#{username},password=#{password} where id=#{id}
+    </update>
+
+    <!--<select id="getUsers" resultType="com.neuedu.pojo.User">-->
+        <!--/*如果没有传递 username  就查全部  如果传递了username 按照username来查*/-->
+        <!--select * from user-->
+        <!--<where>-->
+        <!--<if test="username!=null">-->
+          <!--and  username=#{username}-->
+        <!--</if>-->
+        <!--<if test="id!=null">-->
+          <!--or   id=#{id}-->
+        <!--</if>-->
+        <!--</where>-->
+    <!--</select>-->
+
+    <sql id="a">insert into user </sql>
+    <insert id="intertone">
+        <include refid="a"></include>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username!=null">
+                username,
+            </if>
+            <if test="password!=null">
+                password,
+            </if>
+            <if test="tele!=null">
+              tele
+            </if>
+        </trim>
+            <trim prefix="values(" suffix=")" suffixOverrides=",">
+              <if test="username!=null">
+                #{username},
+              </if>
+                <if test="password!=null">
+                    #{password},
+                </if>
+                <if test="tele!=null">
+                    #{tele}
+                </if>
+        </trim>
+    </insert>
+
+    <select id="getUsers" resultType="com.neuedu.pojo.User">
+        select * from user
+        <if test="username!=null">
+            where username like '%' #{username} '%'
+        </if>
+    </select>
+
 </mapper>
